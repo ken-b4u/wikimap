@@ -4,14 +4,17 @@ import jp.co.generace.map.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import android.support.v4.app.FragmentActivity;
 
@@ -24,7 +27,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 
 
 
@@ -99,8 +106,6 @@ public class FullscreenActivity extends FragmentActivity {
 		if (mMap != null) { 
 			// 現在地表示ボタンを有効にする
 			mMap.setMyLocationEnabled(true);
-			
-
             // 東京駅にマーカーをつける
             mMap.addMarker(new MarkerOptions()
                     .position(TOKYO)
@@ -108,13 +113,26 @@ public class FullscreenActivity extends FragmentActivity {
                     .snippet("はっくなう")
                     .icon(BitmapDescriptorFactory
                             .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-
             // カメラの位置を東京駅に変える
             this.moveCameraToTokyo(true);
-			
-			
+            
+            mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+			@Override
+			public boolean onMarkerClick(Marker arg0) {
+				// TODO Auto-generated method stub
+				goWiki();
+				return false;
+			}});
+            
 		}
 	}
+	
+	private void goWiki () {
+		Uri uri = Uri.parse("http://ja.m.wikipedia.org/wiki/%E3%82%B4%E3%83%BC%E3%82%AC");
+		Intent i = new Intent(Intent.ACTION_VIEW,uri);
+		startActivity(i);
+    }
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
